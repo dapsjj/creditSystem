@@ -12,6 +12,7 @@ import logging
 import os
 import configparser
 
+
 IGNORE_WORDS = set([])  # 重要度計算外とする語
 
 # ひらがな
@@ -337,11 +338,11 @@ def get_year_week_from_Mst_date(server, user, password, database, current_date):
             return ""
     except pymssql.Error as ex:
         logger.error("dbException:" + str(ex))
-        raise
+        raise ex
     except Exception as ex:
         logger.error("Call method get_year_week_from_Mst_date() error!Can not query from table Mst_date!")
         logger.error("Exception:" + str(ex))
-        raise
+        raise ex
     finally:
         conn.close()
 
@@ -360,7 +361,7 @@ def read_dateConfig_file_set_year_week():
         except Exception as ex:
             logger.error("Content in dateConfig.ini has error.")
             logger.error("Exception:" + str(ex))
-            raise
+            raise ex
 
 
 def read_report_from_database(server, user, password, database,report_week,employee_code,report_year = datetime.datetime.now().year):
@@ -388,11 +389,11 @@ def read_report_from_database(server, user, password, database,report_week,emplo
             return ""
     except pymssql.Error as ex:
         logger.error("dbException:" + str(ex))
-        raise
+        raise ex
     except Exception as ex:
         logger.error("Call method read_report_from_database() error!Can not query from table report!")
         logger.error("Exception:" + str(ex))
-        raise
+        raise ex
     finally:
         conn.close()
 
@@ -425,11 +426,11 @@ def calculate_employee_average_point(server, user, password, database,report_yea
             return ""
     except pymssql.Error as ex:
         logger.error("dbException:" + str(ex))
-        raise
+        raise ex
     except Exception as ex:
         logger.error("Call method calculate_employee_average_point() error!Can not query from table report_est!")
         logger.error("Exception:"+str(ex))
-        raise
+        raise ex
     finally:
         conn.close()
 
@@ -494,11 +495,11 @@ def get_employee_list(server, user, password, database, report_year = datetime.d
             return ""
     except pymssql.Error as ex:
         logger.error("dbException:" + str(ex))
-        raise
+        raise ex
     except Exception as ex:
         logger.error("Call method get_employee_list() error!Can not query from table report_target!")
         logger.error("Exception:"+str(ex))
-        raise
+        raise ex
     finally:
         conn.close()
 
@@ -526,11 +527,11 @@ def get_employee_list_from_table_report_target(server, user, password, database)
             return ""
     except pymssql.Error as ex:
         logger.error("dbException:" + str(ex))
-        raise
+        raise ex
     except Exception as ex:
         logger.error("Call method get_employee_list_from_table_report_target() error!Can not query from table report_target!")
         logger.error("Exception:"+str(ex))
-        raise
+        raise ex
     finally:
         conn.close()
 
@@ -561,11 +562,11 @@ def get_employee_and_teacher_list_from_table_report_target(server, user, passwor
             return ""
     except pymssql.Error as ex:
         logger.error("dbException:" + str(ex))
-        raise
+        raise ex
     except Exception as ex:
         logger.error("Call method get_employee_and_teacher_list_from_table_report_target() error!Can not query from table report_target!")
         logger.error("Exception:" + str(ex))
-        raise
+        raise ex
     finally:
         conn.close()
 
@@ -603,11 +604,11 @@ def calculate_intercept_coef(server, user, password, database, coef_week_list, c
                 raise
         except pymssql.Error as ex:
             logger.error("dbException:" + str(ex))
-            raise
+            raise ex
         except Exception as ex:
             logger.error("Call method calculate_intercept_coef() error!Can not query from table report_est_automatic!" )
             logger.error("Exception:"+str(ex))
-            raise
+            raise ex
         finally:
             conn.close()
         if len(coef_list)>0:
@@ -652,12 +653,12 @@ def insert_report_est_automatic(server, user, password, database, datalist):
                 conn.commit()
         except pymssql.Error as ex:
             logger.error("dbException:" + str(ex))
-            raise
+            raise ex
         except Exception as ex:
             logger.error("Call method insert_report_est_automatic() error!")
             logger.error("Exception:"+str(ex))
             conn.rollback()
-            raise
+            raise ex
         finally:
             conn.close()
     else:
@@ -690,12 +691,12 @@ def insert_report_coefficient(server, user, password, database,teacher_list,inte
             conn.commit()
         except pymssql.Error as ex:
             logger.error("dbException:" + str(ex))
-            raise
+            raise ex
         except Exception as ex:
             logger.error("Call method insert_report_coefficient() error!")
             logger.error("Exception:"+str(ex))
             conn.rollback()
-            raise
+            raise ex
         finally:
             conn.close()
     else:
@@ -740,11 +741,11 @@ def calculate_automatic_marking(server, user, password, database, intercept, imp
                 return ""
         except pymssql.Error as ex:
             logger.error("dbException:" + str(ex))
-            raise
+            raise ex
         except Exception as ex:
             logger.error("Call method calculate_automatic_marking() error! Can not query from table report_est_automatic!")
             logger.error("Exception:"+str(ex))
-            raise
+            raise ex
         finally:
             conn.close()
     else:
@@ -780,12 +781,12 @@ def update_col_automatic_marking(server, user, password, database,update_employe
                 conn.commit()
         except pymssql.Error as ex:
             logger.error("dbException:" + str(ex))
-            raise
+            raise ex
         except Exception as ex:
             logger.error("Call method update_col_automatic_marking() error! Can not update table report_est_automatic!")
             logger.error("Exception:"+str(ex))
             conn.rollback()
-            raise
+            raise ex
         finally:
             conn.close()
     else:
@@ -813,12 +814,12 @@ def delete_current_data_from_report_est_automatic(server, user, password, databa
         conn.commit()
     except pymssql.Error as ex:
         logger.error("dbException:" + str(ex))
-        raise
+        raise ex
     except Exception as ex:
         logger.error("Call method delete_current_data_from_report_est_automatic() error!")
         logger.error("Exception:" + str(ex))
         conn.rollback()
-        raise
+        raise ex
     finally:
         conn.close()
 
@@ -844,12 +845,12 @@ def delete_current_data_from_report_est(server, user, password, database,report_
         conn.commit()
     except pymssql.Error as ex:
         logger.error("dbException:" + str(ex))
-        raise
+        raise ex
     except Exception as ex:
         logger.error("Call method delete_current_data_from_report_est() error!")
         logger.error("Exception:" + str(ex))
         conn.rollback()
-        raise
+        raise ex
     finally:
         conn.close()
 
@@ -873,12 +874,12 @@ def delete_current_data_from_report_coefficient(server, user, password, database
         conn.commit()
     except pymssql.Error as ex:
         logger.error("dbException:" + str(ex))
-        raise
+        raise ex
     except Exception as ex:
         logger.error("Call method delete_current_data_from_report_coefficient() error!")
         logger.error("Exception:" + str(ex))
         conn.rollback()
-        raise
+        raise ex
     finally:
         conn.close()
 
@@ -910,12 +911,12 @@ def insert_auto_pick_point_to_report_est(server, user, password, database,insert
                 conn.commit()
         except pymssql.Error as ex:
             logger.error("dbException:" + str(ex))
-            raise
+            raise ex
         except Exception as ex:
             logger.error("Call method insert_auto_pick_point_to_report_est() error! Can not insert into table report_est!")
             logger.error("Exception:"+str(ex))
             conn.rollback()
-            raise
+            raise ex
         finally:
             conn.close()
     else:
@@ -955,12 +956,12 @@ def insert_not_exist_person_in_report_target_to_report_est(server, user, passwor
                 conn.commit()
     except pymssql.Error as ex:
         logger.error("dbException:" + str(ex))
-        raise
+        raise ex
     except Exception as ex:
         logger.error("Call method insert_not_exist_person_in_report_target_to_report_est() error! Can not insert into table report_est!")
         logger.error("Exception:"+str(ex))
         conn.rollback()
-        raise
+        raise ex
     finally:
         conn.close()
 
