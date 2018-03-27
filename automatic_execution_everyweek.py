@@ -415,12 +415,9 @@ def generate_allweeks_employeelist_data(employee_teacher_list, report_week_list,
                         add_list = [str(report_year),str(week),str(employee_teacher[0]),employee_teacher[1],importance_degree,matching_degree,average_score]
                         report_est_automatic_list.append(add_list)
         return report_est_automatic_list
-    # else:
-    #     logger.error("Call method generate_allweeks_employeelist_data() error!"
-    #              +" Length of employee_teacher_list:"+str(len(employee_teacher_list))
-    #              +" Length of report_week_list:"+str(len(report_week_list))
-    #              +" Value of report_year:"+str(report_year))
-        # raise
+    else:
+        logger.error("Call method generate_allweeks_employeelist_data() error!There is a null value in the parameters.")
+        raise
 
 
 def get_employee_list(server, user, password, database, report_year = datetime.datetime.now().year):
@@ -576,9 +573,9 @@ def calculate_intercept_coef(server, user, password, database, coef_week_list, c
             return clf.intercept_[0], clf.coef_[0][0], clf.coef_[0][1]#返回:切片(误差)、重要度、マッチ度
         else:
             return None,None,None#如果coef_list为空，返回3个None
-    # else:
-    #     logger.error("Call method calculate_intercept_coef() error!"+"Length of coef_week_list:"+str(len(coef_week_list))+" Length of coef_employee_list:"+str(len(coef_employee_list)))
-        # raise
+    else:
+        logger.error("Call method calculate_intercept_coef() error!There is a null value in the parameters.")
+        raise
 
 
 def insert_report_est_automatic(server, user, password, database, datalist):
@@ -618,9 +615,9 @@ def insert_report_est_automatic(server, user, password, database, datalist):
             raise ex
         finally:
             conn.close()
-    # else:
-    #     logger.error("Call method insert_report_est_automatic() error!Can not insert into table report_est_automatic! Length of datalist:"+str(len(datalist)))
-        # raise
+    else:
+        logger.error("Call method insert_report_est_automatic() error!There is a null value in the parameters.")
+        raise
 
 
 def insert_report_coefficient(server, user, password, database,teacher_list,intercept,importance_degree,matching_degree,report_year = datetime.datetime.now().year,report_week = [datetime.datetime.now().isocalendar()[1]]):
@@ -637,7 +634,7 @@ def insert_report_coefficient(server, user, password, database,teacher_list,inte
     :param report_week:top报告周
     :return:无
     '''
-    if (intercept is not None) and (importance_degree is not None) and (matching_degree is not None):
+    if intercept and importance_degree and matching_degree:
         try:
             conn = pymssql.connect(server, user, password, database)
             cur = conn.cursor()
@@ -656,9 +653,9 @@ def insert_report_coefficient(server, user, password, database,teacher_list,inte
             raise ex
         finally:
             conn.close()
-    # else:
-    #     logger.error("Call method insert_report_coefficient() error!Can not insert into table report_coefficient! deviation: "+str(intercept)+" importance_degree:"+str(importance_degree)+" matching_degree:"+str(matching_degree))
-        # raise
+    else:
+        logger.error("Call method insert_report_coefficient() error!There is a null value in the parameters.")
+        raise
 
 
 def calculate_automatic_marking(server, user, password, database, intercept, importance_degree, matching_degree,report_year = datetime.datetime.now().year,report_week = [datetime.datetime.now().isocalendar()[1]]):#计算"自动采点"
@@ -674,7 +671,7 @@ def calculate_automatic_marking(server, user, password, database, intercept, imp
     :param report_week:top报告周
     :return:更新report_est_automatic表的列automatic_marking(自动采点)需要用到的list
     '''
-    if (intercept is not None) and (importance_degree is not None) and (matching_degree is not None):
+    if intercept and importance_degree and matching_degree:
         try:
             conn = pymssql.connect(server, user, password, database)
             cur = conn.cursor()
@@ -705,9 +702,9 @@ def calculate_automatic_marking(server, user, password, database, intercept, imp
             raise ex
         finally:
             conn.close()
-    # else:
-    #     logger.error("Call method calculate_automatic_marking() error!Can not query from report_est_automatic! deviation: " + str(intercept) + " importance_degree:" + str(importance_degree) + " matching_degree:" + str(matching_degree))
-        # raise
+    else:
+        logger.error("Call method calculate_automatic_marking() error!There is a null value in the parameters.")
+        raise
 
 
 def update_col_automatic_marking(server, user, password, database,update_employee_list):#更新report_est_automatic表的automatic_marking
@@ -747,9 +744,9 @@ def update_col_automatic_marking(server, user, password, database,update_employe
             raise ex
         finally:
             conn.close()
-    # else:
-    #     logger.error("Call method update_col_automatic_marking() error!Can not update table report_est_automatic! Length of update_employee_list: " + str(len(update_employee_list)))
-        # raise
+    else:
+        logger.error("Call method update_col_automatic_marking() error!There is a null value in the parameters.")
+        raise
 
 
 def delete_current_data_from_report_est_automatic(server, user, password, database,report_year = datetime.datetime.now().year,report_week = [datetime.datetime.now().isocalendar()[1]]):
@@ -878,9 +875,9 @@ def insert_auto_pick_point_to_report_est(server, user, password, database,insert
             raise ex
         finally:
             conn.close()
-    # else:
-        # logger.error("Call method insert_auto_pick_point_to_report_est() error!Can not insert into table report_est! Length of insert_auto_pick_point_list: " + str(len(insert_auto_pick_point_list)))
-        # raise
+    else:
+        logger.error("Call method insert_auto_pick_point_to_report_est() error!There is a null value in the parameters.")
+        raise
 
 
 def insert_not_exist_person_in_report_target_to_report_est(server, user, password, database,report_year = datetime.datetime.now().year,report_week = [datetime.datetime.now().isocalendar()[1]]):#当周没提交top报告的人需要向report_est表插入一条check_code为90001038,automatic_marking为0的数据
@@ -973,20 +970,14 @@ if __name__=="__main__":
     read_dateConfig_file_set_year_week()#读配置文件设置report_year和coef_week_list
     # employee_list = get_employee_list(server, user, password, database, report_year)#获取全员的员工列表(返回社员号列表)
     coef_employee_list = get_employee_list_from_table_report_target(server, user, password, database)#从report_target表获取员工列表(返回社员号列表)
-    logger.info("coef_employee_list:"+str(coef_employee_list))
     coef_employee_and_teacher_list = get_employee_and_teacher_list_from_table_report_target(server, user, password, database)#从report_target表获取员工号和教师号列表(返回社员号和教师号列表)
-    logger.info("coef_employee_and_teacher_list:" + str(coef_employee_and_teacher_list))
     delete_current_data_from_report_est_automatic(server, user, password, database, report_year, coef_week_list)#从report_est_automatic表删除当前周数据
-    logger.info("delete_current_data_from_report_est_automatic ok!")
     data_addto_report_est_automatic = generate_allweeks_employeelist_data(coef_employee_and_teacher_list, coef_week_list,report_year)#生成X年、X周、社员号X、教师数据的社员号X、重要度X、匹配度X、平均分X的列表
-    logger.info("data_addto_report_est_automatic:" + str(data_addto_report_est_automatic))
     insert_report_est_automatic(server, user, password, database, data_addto_report_est_automatic)#插入到report_est_automatic
     delete_current_data_from_report_coefficient(server, user, password, database, report_year, coef_week_list)#从report_coefficient表删除当前周数据
     intercept_coef = calculate_intercept_coef(server, user, password, database, coef_week_list, coef_employee_list, report_year)#获取切片、重要度、マッチ度
-    logger.info("intercept_coef:" + str(intercept_coef))
     insert_report_coefficient(server, user, password, database,teacher_list,intercept_coef[0],intercept_coef[1],intercept_coef[2],report_year,coef_week_list)#插入report_coefficient表数据
     automatic_marking_list = calculate_automatic_marking(server, user, password, database,intercept_coef[0],intercept_coef[1],intercept_coef[2],report_year,coef_week_list)#计算自动采点
-    logger.info("automatic_marking_list:" + str(automatic_marking_list))
     # update_col_automatic_marking(server, user, password, database,automatic_marking_list)#更新report_est_automatic表的automatic_marking(自动采点)
     delete_current_data_from_report_est(server, user, password, database, report_year, coef_week_list)  # 从report_est表删除当前周数据
     insert_auto_pick_point_to_report_est(server, user, password, database,automatic_marking_list)#插入自动采点的90001038到report_est表
