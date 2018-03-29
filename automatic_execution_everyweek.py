@@ -301,6 +301,23 @@ def get_year_week_from_Mst_date(server, user, password, database, current_date):
         conn.close()
 
 
+def read_dateConfig_file_set_database():
+    if os.path.exists(os.path.join(os.path.dirname(__file__), "dateConfig.ini")):
+        try:
+            conf = configparser.ConfigParser()
+            conf.read(os.path.join(os.path.dirname(__file__), "dateConfig.ini"), encoding="utf-8-sig")
+            server = conf.get("server", "server")
+            user = conf.get("user", "user")
+            password = conf.get("password", "password")
+            database = conf.get("database", "database")
+            return server,user,password,database
+        except Exception as ex:
+            logger.error("Content in dateConfig.ini about database has error.")
+            logger.error("Exception:" + str(ex))
+            raise ex
+
+
+
 def read_dateConfig_file_set_year_week():
     global report_year
     global coef_week_list
@@ -313,7 +330,7 @@ def read_dateConfig_file_set_year_week():
             report_year = year
             coef_week_list = [int(week)]
         except Exception as ex:
-            logger.error("Content in dateConfig.ini has error.")
+            logger.error("Content in dateConfig.ini about execute_year or execute_week has error.")
             logger.error("Exception:" + str(ex))
             raise ex
 
@@ -958,10 +975,11 @@ if __name__=="__main__":
     start = time.clock()
     logger.info("Program start,now time is:"+str(time_start))
     # 数据库服务器信息
-    server = "172.17.254.154"
-    user = "test"
-    password = "test"
-    database = "TRIAL"
+    # server = "172.17.254.154"
+    # user = "test"
+    # password = "test"
+    # database = "TRIAL"
+    server,user,password,database = read_dateConfig_file_set_database()#读取配置文件中的数据库信息
     current_date = datetime.datetime.now().strftime("%Y-%m-%d")#系统当前日期
     current_year,current_week = get_year_week_from_Mst_date(server, user, password, database, current_date)#从Mst_date获取当前年和周
     report_year = str(current_year)#当前系统年
