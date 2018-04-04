@@ -81,10 +81,11 @@
 		                if (data.length>0) {
 		                	for(var i=0;i<data.length;i++){  
 		                		var arry = [];
-// 		                		arry.push(data[i].employeeCode);
-// 		                		arry.push(data[i].employeeName);
 		                		arry.push(data[i].working);
 		                		arry.push(data[i].beforeWork);
+		                		arry.push(data[i].employeeCode);
+		                		arry.push(data[i].employeeName);
+		                		
 		                		arryList.push(arry);
 		                        }
 	                       for(var i=0;i<data.length;i++){       
@@ -98,17 +99,67 @@
 	                    		   title: {
 		                               text: 'グルーピング'
 		                           },
-		                           tooltip: {},
-		                           xAxis: {
-		                        	   
+		                           tooltip : {
+		                               showDelay : 0,
+		                               formatter : function (params) {
+		                                   if (params.value.length > 1) {
+		                                       return 'working:' + params.value[0] + '<br>'
+		                       				   +'beforeWork:' + params.value[1]+ '<br>'
+		                                       +'employeeCode:' + params.value[2] + '<br>'
+		                                       +'employeeName:' + params.value[3] ;
+		                                   }
+		                               },
 		                           },
-		                           yAxis: {
-		                        	   
-		                           },
-		                           series: [{
+		                           
+		                           xAxis : [
+		                                    {
+		                                        type : 'value',
+		                                        scale:true,
+		                                        axisLabel : {
+		                                            formatter: '{value}' //working
+		                                        },
+		                                        splitLine: {
+		                                            show: false
+		                                        }
+		                                    }
+		                                ],
+		                                yAxis : [
+		                                    {
+		                                        type : 'value',
+		                                        scale:true,
+		                                        axisLabel : {
+		                                            formatter: '{value}' //beforeWork
+		                                        },
+		                                        splitLine: {
+		                                            show: false
+		                                        }
+		                                    }
+		                                ],
+		                           
+		                           series: [
+		                                {
 		                               // 根据名字对应到相应的系列
 		                               data: arryList,
-		                               type: 'scatter'
+		                               type: 'scatter',
+		                               markArea: {
+		                                   silent: true,
+		                                   itemStyle: {
+		                                       normal: {
+		                                           color: 'transparent',
+		                                        
+		                                           
+		                                       }
+		                                   },
+		                                   
+		                               },
+		                               markLine : {
+		                                   lineStyle: {
+		                                       normal: {
+		                                           type: 'solid'
+		                                       }
+		                                   },
+		                                   
+		                               }
 		                           }]
 	                       }
 	                       myChart.setOption(option,true);
