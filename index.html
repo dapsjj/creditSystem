@@ -174,7 +174,7 @@
 	                }
 		        },
 		        error:function(resp){
-		                alert("Error");
+		        	
 		        }
 		   });
 	  });
@@ -191,7 +191,6 @@
       					strKey: request.term,
       				},
       				dataType: "json",
-//      		    contentType: "application/json; charset=utf-8",//GET请求 server.xml需要 加<Connector connectionTimeout="20000" port="8080" protocol="HTTP/1.1" redirectPort="8443" URIEncoding="UTF-8"/>
     				contentType: "application/x-www-form-urlencoded; charset=utf-8",//POST请求
       				success: function(data) {
       					 if (data.length>0) {
@@ -213,6 +212,46 @@
       		autoFill: true,//要不要在用户选择时自动将用户当前鼠标所在的值填入到input框. Default: false；
       		delay: 1000,//击键后激活autoComplete的延迟时间(单位毫秒).Default: 远程为400 本地10；
       	});
+     
+    /*
+    *页面初始化获取数据库全部值放入employeeList中,然后下拉列表使用localStorage模式时可以获取放到localStorage的数据
+    */  
+    
+    /**
+    *
+    var employeeList = []; 
+   	$.ajax({
+			type: "post",
+			url: "queryEmployeeNameListLocalStorage",
+			async: true,
+			dataType: "json",
+			contentType: "application/x-www-form-urlencoded; charset=utf-8",//POST请求
+			success: function(data) {
+				 if (data.length>0) {
+					for(var i=0;i<data.length;i++){  
+						employeeList.push(data[i].employeeName);
+                    }
+					localStorage.setItem("employeeList", employeeList);
+				} 
+			},
+			error: function(resp) {
+				
+			}
+		});
+   	*/
+   	
+  	/**
+  	*使用localStorage的形式获取下拉列表,这种写法的好处是不会再向后台发请求,坏处是如果数据量较大时,页面初始化加载数据会消耗比较多的时间.
+  	*/
+  	/**
+  	*
+  	$("#employeeName").autocomplete({//输入名字后获取下拉列表的值
+  		source :  localStorage.getItem("employeeList").split(","),
+  		minChars: 0,//在触发autoComplete前用户至少需要输入的字符数.Default: 1，如果设为0，在输入框内双击或者删除输入框内内容时显示列表；
+  		autoFill: true,//要不要在用户选择时自动将用户当前鼠标所在的值填入到input框. Default: false；
+  		delay: 10//击键后激活autoComplete的延迟时间(单位毫秒).Default: 远程为400 本地10；
+  	});
+  	*/
   });
   </script>
 </head>
