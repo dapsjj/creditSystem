@@ -5,6 +5,7 @@
 <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 <!-- <link rel="stylesheet" href="${rc.contextPath}/statics/css/bootstrap.min.css"> -->
 <link rel="stylesheet" href="${rc.contextPath}/statics/css/font-awesome.min.css">
+<link rel="stylesheet" href="${rc.contextPath}/statics/css/jquery-ui.css">
 <link rel="shortcut icon" href="#" />
 <style type="text/css">
 			*{
@@ -56,11 +57,14 @@
 <script src="${rc.contextPath}/statics/libs/jquery.min.js"></script>
 <script src="${rc.contextPath}/statics/libs/bootstrap.min.js"></script>
 <script src="${rc.contextPath}/statics/libs/echarts.min.js"></script>
+<script src="${rc.contextPath}/statics/libs/jquery-ui.js"></script>
 <script type="text/javascript">
   $(document).ready(function(){
-	  $('#echartDiv').hide();
+	  
+	  $('#echartDiv').hide();//页面初始化的时候隐藏echarts的div
 	  var myChart = echarts.init(document.getElementById('echartDiv'));
 	  var option = {};
+	  
       $('#searchGrouping').click(function(){
     	  var workings=[];    
           var beforeWorks=[];   
@@ -173,7 +177,42 @@
 		                alert("Error");
 		        }
 		   });
-	  })
+	  });
+      
+      
+      	$("#employeeName").autocomplete({//输入名字后获取下拉列表的值
+      		source: function(request, response) {
+      			$.ajax({
+      				type: "post",
+      				url: "queryEmployeeNameList",
+      				async: true,
+      				global: false,
+      				data: {
+      					strKey: request.term,
+      				},
+      				dataType: "json",
+//      		    contentType: "application/json; charset=utf-8",//GET请求 server.xml需要 加<Connector connectionTimeout="20000" port="8080" protocol="HTTP/1.1" redirectPort="8443" URIEncoding="UTF-8"/>
+    				contentType: "application/x-www-form-urlencoded; charset=utf-8",//POST请求
+      				success: function(data) {
+      					 if (data.length>0) {
+      						var employeeList = [];
+      						for(var i=0;i<data.length;i++){  
+      							employeeList.push(data[i].employeeName);
+		                        }
+      						response(employeeList);
+      					} else {
+      						response([""]);
+      					}
+      				},
+      				error: function(resp) {
+      					response([""]);
+      				}
+      			});
+      		},
+      		minChars: 0,//在触发autoComplete前用户至少需要输入的字符数.Default: 1，如果设为0，在输入框内双击或者删除输入框内内容时显示列表；
+      		autoFill: true,//要不要在用户选择时自动将用户当前鼠标所在的值填入到input框. Default: false；
+      		delay: 1000,//击键后激活autoComplete的延迟时间(单位毫秒).Default: 远程为400 本地10；
+      	});
   });
   </script>
 </head>
