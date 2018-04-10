@@ -3,9 +3,10 @@
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-<!-- <link rel="stylesheet" href="${rc.contextPath}/statics/css/bootstrap.min.css"> -->
+<link rel="stylesheet" href="${rc.contextPath}/statics/css/bootstrap.min.css">
 <link rel="stylesheet" href="${rc.contextPath}/statics/css/font-awesome.min.css">
 <link rel="stylesheet" href="${rc.contextPath}/statics/css/jquery-ui.css">
+<link rel="stylesheet" href="${rc.contextPath}/statics/css/toastr.min.css">
 <link rel="shortcut icon" href="#" />
 <style type="text/css">
 			*{
@@ -58,21 +59,63 @@
 <script src="${rc.contextPath}/statics/libs/bootstrap.min.js"></script>
 <script src="${rc.contextPath}/statics/libs/echarts.min.js"></script>
 <script src="${rc.contextPath}/statics/libs/jquery-ui.js"></script>
+<script src="${rc.contextPath}/statics/libs/toastr.min.js"></script>
 <script type="text/javascript">
   $(document).ready(function(){
 	  
 	  $('#echartDiv').hide();//页面初始化的时候隐藏echarts的div
 	  var myChart = echarts.init(document.getElementById('echartDiv'));
 	  var option = {};
-	  
+	  var toastrOptions = {
+			   //是否显示关闭按钮
+			   closeButton: true,
+			   //是否使用debug模式
+			   debug: false,
+			   //弹出窗的位置
+			   positionClass: 'toast-top-center',
+			   onclick: null,
+			   //显示的动画时间
+			   showDuration: 300,
+			   //消失的动画时间
+			   hideDuration: 1000,
+			   //展现时间
+			   timeOut: 3000,
+			   //加长展示时间
+			   extendedTimeOut: 1000,
+			   //显示时的动画缓冲方式
+			   showEasing: 'swing',
+			   //消失时的动画缓冲方式
+			   hideEasing: 'linear',
+			   //显示时的动画方式
+			   showMethod: 'fadeIn',
+			   //消失时的动画方式
+			   hideMethod: 'fadeOut'
+			  };
+			  //重写默认,如不重写则使用默认
+			  toastr.options = toastrOptions;
+			  
+	//验证字符串是否是数字
+	function checkNumber(theObj) {
+		var reg = /^[0-9]*$/;
+		if (reg.test(theObj)) {
+			return true;
+		}
+			return false;
+	}
+	
       $('#searchGrouping').click(function(){
+    	  
     	  var workings=[];    
           var beforeWorks=[];   
           var arryList = [];
 		  var params = {};  
 		  params.employeeCode = $.trim($('#employeeCode').val());  
 		  params.employeeName = $.trim($('#employeeName').val());  
-          //params.id = $("#id").val();//注意params.名称  名称与实体bean中名称一致  
+          //params.id = $("#id").val();//注意params.名称  名称与实体bean中名称一致
+          if (!checkNumber(params.employeeCode)){
+        		toastr.info('数字を入力してください!');
+        	  	return;
+          }
 		  $.ajax({
 		        type: 'POST', 
 		        url: 'queryEmployeeShowECharts',
@@ -89,7 +132,6 @@
 		                		arry.push(data[i].beforeWork);
 		                		arry.push(data[i].employeeCode);
 		                		arry.push(data[i].employeeName);
-		                		
 		                		arryList.push(arry);
 		                        }
 	                       for(var i=0;i<data.length;i++){       
@@ -150,12 +192,11 @@
 		                                   itemStyle: {
 		                                       normal: {
 		                                           color: 'transparent',
-		                                        
-		                                           
 		                                       }
 		                                   },
 		                                   
 		                               },
+		                               
 		                               markLine : {
 		                                   lineStyle: {
 		                                       normal: {
@@ -210,7 +251,7 @@
       		},
       		minChars: 0,//在触发autoComplete前用户至少需要输入的字符数.Default: 1，如果设为0，在输入框内双击或者删除输入框内内容时显示列表；
       		autoFill: true,//要不要在用户选择时自动将用户当前鼠标所在的值填入到input框. Default: false；
-      		delay: 1000,//击键后激活autoComplete的延迟时间(单位毫秒).Default: 远程为400 本地10；
+      		delay: 500,//击键后激活autoComplete的延迟时间(单位毫秒).Default: 远程为400 本地10；
       	});
      
     /*
