@@ -103,7 +103,6 @@
 	}
 	
       $('#searchGrouping').click(function(){
-    	  
     	  var workings=[];    
           var beforeWorks=[];   
           var arryList = [];
@@ -144,14 +143,16 @@
 	                    		   title: {
 		                               text: 'グルーピング'
 		                           },
+		                           //backgroundColor:'rgba(128, 128, 128, 0.1)', //rgba设置透明度0.1
+		                        	backgroundColor: '#E0FFFF',
 		                           tooltip : {
 		                               showDelay : 0,
 		                               formatter : function (params) {
 		                                   if (params.value.length > 1) {
-		                                       return 'working:' + params.value[0] + '<br>'
-		                       				   +'beforeWork:' + params.value[1]+ '<br>'
-		                                       +'employeeCode:' + params.value[2] + '<br>'
-		                                       +'employeeName:' + params.value[3] ;
+		                                       return '社員CD: ' + params.value[2] + '<br>'
+		                                       + '社員名: ' + params.value[3] + '<br>'
+		                                       + '入職前: ' + params.value[1] + '<br>'
+		                                       + '在職中: ' + params.value[0];
 		                                   }
 		                               },
 		                           },
