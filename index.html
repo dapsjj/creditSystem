@@ -25,19 +25,26 @@
 				margin: 5px 5px;
 				height: 60px;
 				padding: 3px;
-				border: 1px solid #66a5a4a6;	
+				border: 1px solid #66a5a4a6;
+				width: 60%;	
+				margin: 0 auto;
+				background: #E0FFFF;
 			}
 			.tablebox{
 				margin: 5px 5px;
 				padding: 3px;
 				border: 1px solid #66a5a4a6;	
+				margin: 0 auto;
+				width: 60%;
+   			    height: 30%;
+   			    background-color: #E0FFFF;
 			}
 			header p{
 				font-family: Microsoft YaHei;
 				line-height: 60px;
 				text-align: center;
 				font-size:30px;
-				background: #00ffff; 
+				
 			}
 			.tablebox table{
 				width: 100%;
@@ -51,8 +58,9 @@
 				text-align: center;
 			}
 			#echartDiv{
-				width: 800px; 
+				width:920px; 
 				height:460px; 
+				margin: 0 auto;
 			}
 		</style>
 <script src="${rc.contextPath}/statics/libs/jquery.min.js"></script>
@@ -144,7 +152,7 @@
 		                               text: 'グルーピング'
 		                           },
 		                           //backgroundColor:'rgba(128, 128, 128, 0.1)', //rgba设置透明度0.1
-		                        	backgroundColor: '#E0FFFF',
+		                           backgroundColor: '#E0FFFF',
 		                           tooltip : {
 		                               showDelay : 0,
 		                               formatter : function (params) {
