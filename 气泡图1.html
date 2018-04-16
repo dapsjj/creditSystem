@@ -164,8 +164,22 @@
 	                    		   title: {
 		                               text: 'グルーピング'
 		                           },
+		                           backgroundColor: new echarts.graphic.RadialGradient(0.3, 0.3, 0.8, [{
+		                               offset: 0,
+		                               color: '#f7f8fa'
+		                           }, {
+		                               offset: 1,
+		                               color: '#cdd0d5'
+		                           }]),
 		                           //backgroundColor:'rgba(128, 128, 128, 0.1)', //rgba设置透明度0.1
-		                           backgroundColor: '#E0FFFF',
+		                           //backgroundColor: '#E0FFFF',
+		                           backgroundColor: new echarts.graphic.RadialGradient(0.3, 0.3, 0.8, [{
+        								offset: 0,
+       									color: '#f7f8fa'
+    								}, {
+								        offset: 1,
+								        color: '#cdd0d5'
+    								}]),
 		                           tooltip : {
 		                               showDelay : 0,
 		                               formatter : function (params) {
