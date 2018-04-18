@@ -214,7 +214,6 @@ def term_importance(*args):
     return master
 
 
-
 def calculate_importance(member_txt):
     tatext_member = member_txt
     content = re.sub('\s', '', member_txt)#去掉空白字符
@@ -282,7 +281,6 @@ def read_dateConfig_file_set_database():
             raise ex
 
 
-
 def read_dateConfig_file_set_year_week():
     global report_year
     global report_week
@@ -330,8 +328,6 @@ def get_report_employee_list(server, user, password, database, report_year,repor
         conn.close()
 
 
-
-
 def read_report_from_database(server, user, password, database,report_year,report_week,employee_code):
     '''
     :param server:服务器名称
@@ -366,7 +362,6 @@ def read_report_from_database(server, user, password, database,report_year,repor
         conn.close()
 
 
-
 def generate_appointed_importance_data(server, user, password, database, employee_list, report_year, report_week):
     '''
     :param employee_list:report表再X年X周的社员列表
@@ -392,6 +387,7 @@ def generate_appointed_importance_data(server, user, password, database, employe
         logger.error("Call method generate_appointed_importance_data() error!There is a null value in the parameters.!")
         logger.error("Exception:" + str(ex))
         raise ex
+
 
 def insert_report_importance(server, user, password, database, datalist):
     '''
@@ -432,10 +428,6 @@ def insert_report_importance(server, user, password, database, datalist):
         raise
 
 
-
-
-
-
 def write_log():
     '''
     :return: 返回logger对象
@@ -461,14 +453,14 @@ if __name__=="__main__":
     logger = write_log()  # 获取日志对象
     time_start = datetime.datetime.now()
     start = time.clock()
-    # logger.info("Program start,now time is:"+str(time_start))
+    logger.info("Program start,now time is:"+str(time_start))
     server,user,password,database = read_dateConfig_file_set_database()#读取配置文件中的数据库信息
     current_date = datetime.datetime.now().strftime("%Y-%m-%d")#系统当前日期
     current_year,current_week = get_year_week_from_Mst_date(server, user, password, database, current_date)#从Mst_date获取当前年和周
     report_year = str(current_year)#当前系统年
     report_week = str(current_week) #当前系统周
     read_dateConfig_file_set_year_week()#读配置文件设置report_year和report_week
-    report_employee_list= get_report_employee_list(server, user, password, database,report_year,report_week)#从report表获取X年,X周,社员列表
+    report_employee_list = get_report_employee_list(server, user, password, database,report_year,report_week)#从report表获取X年,X周,社员列表
     data_addto_report_importance = generate_appointed_importance_data(server, user, password, database, report_employee_list, report_year, report_week)#生成X年、X周、社员号X、重要度X、字数X的列表
     insert_report_importance(server, user, password, database, data_addto_report_importance)# 插入X年、X月、社员号X、重要度、top报告长度到report_importance
     time_end = datetime.datetime.now()
