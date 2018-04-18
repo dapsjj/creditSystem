@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+<link rel="stylesheet" href="${rc.contextPath}/statics/css/bootstrap.min.css">
+<link rel="stylesheet" href="${rc.contextPath}/statics/css/font-awesome.min.css">
+<link rel="stylesheet" href="${rc.contextPath}/statics/css/jquery-ui.css">
+<link rel="stylesheet" href="${rc.contextPath}/statics/css/toastr.min.css">
+<link rel="shortcut icon" href="#" />
+<style type="text/css">
+			*{
+				margin: 0;
+				padding: 0;
+			}
+			html{
+				widht: 100%;
+				height: 100%;
+			}
+			body{
+				widht: 100%;
+				height: 100%;
+			}
+			header{
+				margin: 5px 5px;
+				height: 60px;
+				padding: 3px;
+				border: 1px solid #66a5a4a6;
+				width: 60%;	
+				margin: 0 auto;
+				background: #E0FFFF;
+			}
+			.tablebox{
+				margin: 5px 5px;
+				padding: 3px;
+				border: 1px solid #66a5a4a6;	
+				margin: 0 auto;
+				width: 60%;
+   			    height: 30%;
+   			    background-color: #E0FFFF;
+			}
+			header p{
+				font-family: Microsoft YaHei;
+				line-height: 60px;
+				text-align: center;
+				font-size:30px;
+				
+			}
+			.tablebox table{
+				width: 100%;
+				border: 1px solid #66a5a4a6;	
+			}
+			.tablebox table td{
+				border: 1px solid #66a5a4a6;
+				height: 40px;
+			}
+			.tablebox table{
+				text-align: center;
+			}
+			#echartDiv{
+				width:920px; 
+				height:460px; 
+				margin: 0 auto;
+				
+			}
+		</style>
+<script src="${rc.contextPath}/statics/libs/jquery.min.js"></script>
+<script src="${rc.contextPath}/statics/libs/bootstrap.min.js"></script>
+<script src="${rc.contextPath}/statics/libs/echarts.min.js"></script>
+<script src="${rc.contextPath}/statics/libs/jquery-ui.js"></script>
+<script src="${rc.contextPath}/statics/libs/toastr.min.js"></script>
+<!-- <script src="${rc.contextPath}/statics/libs/exporting.js"></script> -->
+<script src="${rc.contextPath}/statics/libs/highcharts.js"></script>
+<script src="${rc.contextPath}/statics/libs/highcharts-more.js"></script>
+<script type="text/javascript">
+  $(document).ready(function(){
+	  $('#echartDiv').hide();//页面初始化的时候隐藏echarts的div
+	  var toastrOptions = {
+			   //是否显示关闭按钮
+			   closeButton: true,
+			   //是否使用debug模式
+			   debug: false,
+			   //弹出窗的位置
+			   positionClass: 'toast-top-center',
+			   onclick: null,
+			   //显示的动画时间
+			   showDuration: 300,
+			   //消失的动画时间
+			   hideDuration: 1000,
+			   //展现时间
+			   timeOut: 3000,
+			   //加长展示时间
+			   extendedTimeOut: 1000,
+			   //显示时的动画缓冲方式
+			   showEasing: 'swing',
+			   //消失时的动画缓冲方式
+			   hideEasing: 'linear',
+			   //显示时的动画方式
+			   showMethod: 'fadeIn',
+			   //消失时的动画方式
+			   hideMethod: 'fadeOut'
+			  };
+			  //重写默认,如不重写则使用默认
+			  toastr.options = toastrOptions;
+			  
+	//验证字符串是否是数字
+	function checkNumber(theObj) {
+		var reg = /^[0-9]*$/;
+		if (reg.test(theObj)) {
+			return true;
+		}
+			return false;
+	}
+	
+      $('#searchGrouping').click(function(){
+    	  var workings=[];    
+          var beforeWorks=[];   
+          var arryList = [];
+          var arryList1 = [];
+          var arryList2 = [];
+          var arryList3 = [];
+          var arryList4 = [];
+		  var params = {};  
+		  params.employeeCode = $.trim($('#employeeCode').val());  
+		  params.employeeName = $.trim($('#employeeName').val());  
+          if (!checkNumber(params.employeeCode)){
+        		toastr.info('数字を入力してください!');
+        	  	return;
+          }
+		  $.ajax({
+		        type: 'POST', 
+		        url: 'queryEmployeeShowECharts',
+		        data: params,  
+		        async: true,
+		        dataType: 'json',//预期服务器返回的数据类型
+//  		    contentType: "application/json; charset=utf-8",//GET请求 server.xml需要 加<Connector connectionTimeout="20000" port="8080" protocol="HTTP/1.1" redirectPort="8443" URIEncoding="UTF-8"/>
+				contentType: "application/x-www-form-urlencoded; charset=utf-8",//POST请求
+		        success: function (data) {
+		                if (data.length>0) {
+	                       data.map(function(el,i){
+	                    	   data[i]=({x:el.working,y:el.beforeWork,z:el.employeeCode,employeeName:el.employeeName}); 
+	                    	   })
+                    	   for(var i=0;i<data.length;i++){  
+		                		if(i>0 && i<=5){
+		                			arryList1.push(data[i]);
+		                		}else if (i>=6 && i<=10){
+		                			arryList2.push(data[i]);
+		                		}else{
+		                			arryList3.push(data[i]);
+		                		}
+		                      }
+	                       console.info(arryList1);
+	                       $('#echartDiv').highcharts({
+	                           chart: {
+	                               type: 'bubble',
+	                               plotBorderWidth: 1,
+	                               zoomType: 'xy'
+	                           },
+	                           title: {
+	                               text: 'グルーピング'
+	                           },
+	                           xAxis: {
+	                               gridLineWidth: 1
+	                           },
+	                           yAxis: {
+	                               startOnTick: false,
+	                               endOnTick: false
+	                           },
+	                           tooltip: {
+	                               useHTML: true,
+	                               headerFormat: '<table>',
+	                               pointFormat: '在職中:{point.x}<br/>' +
+	                               '入職前:{point.y}<br/>' +
+	                               '社員CD:{point.z}<br/>' +
+	                               '社員名:{point.employeeName}',
+	                               followPointer: true
+	                           },
+	                           plotOptions: {
+	                               series: {
+	                                   dataLabels: {
+	                                       enabled: true,
+	                                       format: '{point.employeeName}'
+	                                   }
+	                               }
+	                           },
+	                           series: [
+								{
+								    data: arryList1,
+								    marker: {
+								        fillColor: {
+								            radialGradient: { cx: 0.4, cy: 0.3, r: 0.7 },
+								            stops: [
+								                [0, 'rgba(255,255,0,0.5)'],
+								                [1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0.5).get('rgba')]
+								            ]
+								        }
+								    }
+								},{
+								    data: arryList2,
+								    marker: {
+								        fillColor: {
+								            radialGradient: { cx: 0.4, cy: 0.3, r: 0.7 },
+								            stops: [
+								                [0, 'rgba(0,255,255,0.5)'],
+								                [1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0.5).get('rgba')]
+								            ]
+								        }
+								    }
+								},{
+								    data: arryList3,
+								    marker: {
+								        fillColor: {
+								            radialGradient: { cx: 0.4, cy: 0.3, r: 0.7 },
+								            stops: [
+								                [0, 'rgba(255,0,255,0.5)'],
+								                [1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0.5).get('rgba')]
+								            ]
+								        }
+								    }
+								}
+	                                    ]
+	                       });
+	                       $('#echartDiv').show();
+	                }
+	                else{
+	                	$('#echartDiv').hide();
+	                }
+		        },
+		        error:function(resp){
+		        	
+		        }
+		   });
+	  });
+      
+      
+      	$("#employeeName").autocomplete({//输入名字后获取下拉列表的值
+      		source: function(request, response) {
+      			$.ajax({
+      				type: "post",
+      				url: "queryEmployeeNameList",
+      				async: true,
+      				global: false,
+      				data: {
+      					strKey: request.term,
+      				},
+      				dataType: "json",
+    				contentType: "application/x-www-form-urlencoded; charset=utf-8",//POST请求
+      				success: function(data) {
+      					 if (data.length>0) {
+      						var employeeList = [];
+      						for(var i=0;i<data.length;i++){  
+      							employeeList.push(data[i].employeeName);
+		                        }
+      						response(employeeList);
+      					} else {
+      						response([""]);
+      					}
+      				},
+      				error: function(resp) {
+      					response([""]);
+      				}
+      			});
+      		},
+      		minChars: 0,//在触发autoComplete前用户至少需要输入的字符数.Default: 1，如果设为0，在输入框内双击或者删除输入框内内容时显示列表；
+      		autoFill: true,//要不要在用户选择时自动将用户当前鼠标所在的值填入到input框. Default: false；
+      		delay: 500,//击键后激活autoComplete的延迟时间(单位毫秒).Default: 远程为400 本地10；
+      	});
+     
+    /*
+    *页面初始化获取数据库全部值放入employeeList中,然后下拉列表使用localStorage模式时可以获取放到localStorage的数据
+    */  
+    
+    /**
+    *
+    var employeeList = []; 
+   	$.ajax({
+			type: "post",
+			url: "queryEmployeeNameListLocalStorage",
+			async: true,
+			dataType: "json",
+			contentType: "application/x-www-form-urlencoded; charset=utf-8",//POST请求
+			success: function(data) {
+				 if (data.length>0) {
+					for(var i=0;i<data.length;i++){  
+						employeeList.push(data[i].employeeName);
+                    }
+					localStorage.setItem("employeeList", employeeList);
+				} 
+			},
+			error: function(resp) {
+				
+			}
+		});
+   	*/
+   	
+  	/**
+  	*使用localStorage的形式获取下拉列表,这种写法的好处是不会再向后台发请求,坏处是如果数据量较大时,页面初始化加载数据会消耗比较多的时间.
+  	*/
+  	/**
+  	*
+  	$("#employeeName").autocomplete({//输入名字后获取下拉列表的值
+  		source :  localStorage.getItem("employeeList").split(","),
+  		minChars: 0,//在触发autoComplete前用户至少需要输入的字符数.Default: 1，如果设为0，在输入框内双击或者删除输入框内内容时显示列表；
+  		autoFill: true,//要不要在用户选择时自动将用户当前鼠标所在的值填入到input框. Default: false；
+  		delay: 10//击键后激活autoComplete的延迟时间(单位毫秒).Default: 远程为400 本地10；
+  	});
+  	*/
+  });
+  </script>
+</head>
+<body>
+  		<header>
+			<p>検索</p>
+		</header>
+		<div class="tablebox">
+			<table>
+				<tr>
+					<td style="width: 20%;">社員CD</td>
+					<td style="text-align: left;"><input type="text" id="employeeCode"style="width: 30%;height:30px;border: 1px solid black;font-size: 1.3em;"/></td>
+				</tr>
+				<tr>
+					<td>社員名</td>
+					<td style="text-align: left;"><input type="text" id="employeeName"style="width: 40%;height:30px ;border:1px solid black;font-size: 1.3em;"/></td>
+				</tr>
+				<tr>
+					<td colspan="2">
+					<button id="searchGrouping" class = "btn btn-primary">检索 </button>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div id="echartDiv">
+		</div>
+</body>
+</html>
