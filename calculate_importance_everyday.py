@@ -8,6 +8,7 @@ import time
 import logging
 import os
 import configparser
+import decimal #不加打包成exe会出错
 
 
 
