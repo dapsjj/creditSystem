@@ -327,8 +327,10 @@ def read_dateConfig_file_set_year_week():
             conf.read(os.path.join(os.path.dirname(__file__), "dateConfig.ini"), encoding="utf-8-sig")
             year = conf.get("execute_year", "year")
             week = conf.get("execute_week", "week")
-            report_year = year
-            coef_week_list = [int(week)]
+            if  year:
+                report_year = year
+            if week:
+                coef_week_list = [int(week)]
         except Exception as ex:
             logger.error("Content in dateConfig.ini about execute_year or execute_week has error.")
             logger.error("Exception:" + str(ex))
@@ -383,11 +385,11 @@ def calculate_employee_average_point(server, user, password, database,report_yea
     try:
         conn = pymssql.connect(server, user, password, database)
         cur = conn.cursor()
-        sql = "select count(1), convert(decimal(18, 2), sum(marking)/convert(decimal(18, 2), count(1))), cast(employee_code as int) from report_est where report_year = %s and report_week = %s and employee_code=%s and check_code != 90001038  group by employee_code " \
+        sql = "select count(1), convert(decimal(18, 2), sum(marking)/convert(decimal(18, 2), count(1)))  from report_est where report_year = %s and report_week = %s and employee_code=%s and check_code != 90001038 and marking is not null  " \
               % (report_year, report_week, employee_code)
         cur.execute(sql)
         rows = cur.fetchall()
-        if rows != []:
+        if rows:
             if rows[0][1] is not None:
                 score = rows[0][1]
                 return score
@@ -408,7 +410,7 @@ def calculate_employee_average_point(server, user, password, database,report_yea
 
 def generate_allweeks_employeelist_data(employee_teacher_list, report_week_list, report_year = datetime.datetime.now().year):
     '''
-    :param employee_code_list:要插入到report_est_automatic表的社员号+教师号列表
+    :param employee_teacher_list:要插入到report_est_automatic表的社员号+教师号列表
     :param report_year:top报告年份
     :param report_week_list:top报告周列表
     :return:要插入到report_est_automatic表的list
@@ -616,7 +618,7 @@ def insert_report_est_automatic(server, user, password, database, datalist):
                 check_code = one_row[3]
                 importance_degree = one_row[4]
                 matching_degree = one_row[5]
-                marking = one_row[6]
+                marking = round(float(one_row[6]))
                 sql = ' insert into report_est_automatic (report_year, report_week, employee_code,check_code,importance_degree,matching_degree,making_Average) ' \
                       ' values(%s, %s, %s, %s, %s, %s, %s) '\
                       %(report_year,report_week,employee_code,check_code,importance_degree,matching_degree,marking)
@@ -876,7 +878,7 @@ def insert_auto_pick_point_to_report_est(server, user, password, database,insert
                 report_week = row[1]
                 employee_code = row[2]
                 check_code = 90001038
-                automatic_marking = row[7]
+                automatic_marking = round(row[7])
                 sql = ' insert into report_est (report_year, report_week, employee_code,check_code,marking ) ' \
                       ' values(%s, %s, %s, %s, %s ) ' \
                       % (report_year, report_week, employee_code, check_code, automatic_marking)
@@ -999,7 +1001,7 @@ if __name__=="__main__":
     # update_col_automatic_marking(server, user, password, database,automatic_marking_list)#更新report_est_automatic表的automatic_marking(自动采点)
     delete_current_data_from_report_est(server, user, password, database, report_year, coef_week_list)  # 从report_est表删除当前周数据
     insert_auto_pick_point_to_report_est(server, user, password, database,automatic_marking_list)#插入自动采点的90001038到report_est表
-    insert_not_exist_person_in_report_target_to_report_est(server, user, password, database,report_year,coef_week_list)#将report_target表有而report表没有的人(就是当周没提交top报告的人),插入到report_est(check_code:90001038;marking:0)
+    # insert_not_exist_person_in_report_target_to_report_est(server, user, password, database,report_year,coef_week_list)#将report_target表有而report表没有的人(就是当周没提交top报告的人),插入到report_est(check_code:90001038;marking:0)
     time_end = datetime.datetime.now()
     end = time.clock()
     logger.info("Program end,now time is:"+str(time_end))
