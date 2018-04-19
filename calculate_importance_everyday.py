@@ -320,8 +320,7 @@ def get_report_employee_list(server, user, password, database, report_year,repor
         logger.error("dbException:" + str(ex))
         raise ex
     except Exception as ex:
-        logger.error(
-            "Call method get_report_employee_list() error!Can not query from table report!")
+        logger.error("Call method get_report_employee_list() error!Can not query from table report!")
         logger.error("Exception:" + str(ex))
         raise ex
     finally:
@@ -417,14 +416,13 @@ def insert_report_importance(server, user, password, database, datalist):
             logger.error("dbException:" + str(ex))
             raise ex
         except Exception as ex:
-            logger.error("Call method insert_report_importance() error!")
             logger.error("Exception:"+str(ex))
             conn.rollback()
             raise ex
         finally:
             conn.close()
     else:
-        logger.error("Call method insert_report_est_automatic() error!There is a null value in the parameters.")
+        logger.error("Call method insert_report_importance() error!There is a null value in the parameters.")
         raise
 
 
