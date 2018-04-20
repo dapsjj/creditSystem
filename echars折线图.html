@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html style="height: 100%">
+   <head>
+       <meta charset="utf-8">
+   </head>
+   <body style="height: 100%; margin: 0">
+       <div id="container" style="height: 100%"></div>
+       <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts.min.js"></script>
+       <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts-gl/echarts-gl.min.js"></script>
+       <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts-stat/ecStat.min.js"></script>
+       <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/dataTool.min.js"></script>
+       <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/china.js"></script>
+       <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/world.js"></script>
+       <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=ZUONbpqGBsYGXNIYHicvbAbM"></script>
+       <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/bmap.min.js"></script>
+       <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/simplex.js"></script>
+       <script type="text/javascript">
+var dom = document.getElementById("container");
+var myChart = echarts.init(dom);
+var app = {};
+option = null;
+option = {
+    title: {
+        text: 'Importance',
+		left: 'center',
+		top: '100'
+    },
+	
+    tooltip: {
+        trigger: 'axis'
+    },
+	 toolbox: {
+        show: true,
+        feature: {
+            dataZoom: {
+                yAxisIndex: 'none'
+            },
+            restore: {},
+        }
+    },
+    dataZoom: [
+        {
+            type: 'slider',
+            show: true,
+            xAxisIndex: [0],
+			realtime: true,
+            //start: 0,
+            //end: 100
+        },
+        {
+            type: 'slider',
+            show: true,
+            yAxisIndex: [0],
+			realtime: true,
+            //start: 0,
+            // end: 100
+        },
+        
+    ],
+    grid: {
+        left: '20%',
+        right: '20%',
+		top: '20%',
+        bottom: '20%',
+        containLabel: true
+    },
+    
+    xAxis: {
+        type: 'category',
+        boundaryGap: false,
+        data: ['2018第1週','2018第2週','2018第3週','2018第4週','2018第5週','2018第6週','2018第7週','2018第8週','2018第9週','2018第10週']
+    },
+    yAxis: {
+        type: 'value'
+    },
+    series: [
+        {
+            name:'employ1',
+            type:'line',
+            //stack: '总量',
+            data:[1884.0000000000,2936.0000000000,2039.0000000000,1948.0000000000,1814.0000000000,2071.0000000000,2183.0000000000,3234.0000000000,3426.0000000000,2188.0000000000]
+        },
+		{
+            name:'employ3',
+            type:'line',
+            //stack: '总量',
+            data:[875.0000000000,694.0000000000,919.0000000000,1092.0000000000,815.0000000000,1137.0000000000,1421.0000000000,1547.0000000000,1737.0000000000,1748.0000000000]
+        }
+ 
+    ]
+};
+;
+if (option && typeof option === "object") {
+    myChart.setOption(option, true);
+}
+       </script>
+   </body>
+</html>
