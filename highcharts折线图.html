@@ -1,0 +1,79 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="icon" href="https://static.jianshukeji.com/highcharts/images/favicon.ico">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="https://img.hcharts.cn/jquery/jquery-1.8.3.min.js"></script>
+<script src="https://img.hcharts.cn/highcharts/highcharts.js"></script>
+<script src="https://img.hcharts.cn/highcharts/modules/exporting.js"></script>
+<script src="https://img.hcharts.cn/highcharts/modules/oldie.js"></script>
+<script src="https://img.hcharts.cn/highcharts-plugins/highcharts-zh_CN.js"></script>
+</head>
+<body>
+
+	<div id="container" style="min-width:400px;height:400px"></div>
+
+	<script>
+	var chart = null;
+	data1 = [1884.0000000000,2936.0000000000,2039.0000000000,1948.0000000000,1814.0000000000,2071.0000000000,2183.0000000000,3234.0000000000,3426.0000000000,2188.0000000000]
+	data2 = [875.0000000000,694.0000000000,919.0000000000,1092.0000000000,815.0000000000,1137.0000000000,1421.0000000000,1547.0000000000,1737.0000000000,1748.0000000000]
+    chart = Highcharts.chart('container', {
+        chart: {
+            zoomType: 'xy'
+        },
+        title: {
+            text: 'Importance'
+        },
+         xAxis: {
+        categories: ['2018第1週','2018第2週','2018第3週','2018第4週','2018第5週','2018第6週','2018第7週','2018第8週','2018第9週','2018第10週']
+		},
+		/*
+        tooltip: {
+            dateTimeLabelFormats: {
+                week: '%m-%d',
+                month: '%Y-%m',
+                year: '%Y'
+            }
+        },
+		*/
+        yAxis: {
+            title: {
+                text: '重要度'
+            }
+        },
+        legend: {
+            enabled: false
+        },
+        plotOptions: {
+            line: {
+                marker: {
+                    radius: 2
+                },
+				dataLabels: {
+                enabled: true          // 开启数据标签
+				},
+                lineWidth: 1,
+                states: {
+                    hover: {
+                        lineWidth: 1
+                    }
+                },
+                threshold: null
+            }
+        },
+        series: [{
+            type: 'line',
+            name: 'employee1',
+            data: data1
+        },
+		{
+            type: 'line',
+            name: 'employee3',
+            data: data2
+        }
+		]
+    });
+</script>
+</body>
+</html>
