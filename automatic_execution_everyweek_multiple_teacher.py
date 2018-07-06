@@ -3,14 +3,12 @@ import MeCab
 import re
 import collections
 import pymssql
-import pandas as pd
-from sklearn.linear_model import LinearRegression
 import datetime
 import time
-import sys
 import logging
 import os
 import configparser
+import decimal #must add this line
 
 
 IGNORE_WORDS = set([])  # 重要度計算外とする語
